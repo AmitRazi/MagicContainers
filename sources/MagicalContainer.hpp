@@ -15,7 +15,7 @@ private:
     std::vector<int> _sortedData;
     std::vector<int> _primeData;
 
-    int _len;
+    unsigned long _len;
     int _modificationNum = 0;
 
     int getModifications();

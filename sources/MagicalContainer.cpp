@@ -23,7 +23,7 @@ void MagicalContainer::addElement(int element) {
 }
 
 void MagicalContainer::removeElement(int num) {
-    int index = findIndex(num);
+    unsigned long index = findIndex(num);
     if(index != -1) {
         removePrime(_data[index]);
         removeSorted(_data[index]);
