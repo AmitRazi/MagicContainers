@@ -28,7 +28,7 @@ private:
 
     void removeSorted(int &num);
 
-    int findIndex(int &num);
+    unsigned long findIndex(int &num);
 
 public:
     MagicalContainer() : _len(0), _modificationNum(0) {};
@@ -121,7 +121,7 @@ private:
     MagicalContainer &_container;
     int *_ptr;
     int _modificationNum;
-    int _nextElement;
+    unsigned long _nextElement;
     bool _sideFlag;
 
     SideCrossIterator(MagicalContainer &container, int *pos) : _container(container), _ptr(pos),
