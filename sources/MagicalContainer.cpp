@@ -32,7 +32,7 @@ void MagicalContainer::removeElement(int num) {
     }
 }
 
-unsigned long MagicalContainer::findIndex(int &num){
+int MagicalContainer::findIndex(int &num){
     auto position = std::find(_data.begin(),_data.end(),num);
     if(position != _data.end()){
         return static_cast<int>(std::distance(_data.begin(),position));
