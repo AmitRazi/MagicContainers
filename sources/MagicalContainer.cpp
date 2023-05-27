@@ -6,6 +6,7 @@
 #include <cmath>
 #include <algorithm>
 #include <vector>
+#include <stdexcept>
 
 bool MagicalContainer::isPrime(int &num) {
     for (int i = 2; i <= sqrt(num); i++) {
@@ -79,10 +80,13 @@ int MagicalContainer::getModifications() {
 
 
 int &MagicalContainer::AscendingIterator::operator*() {
-    if(_ptr != &_container._sortedData[_container._len-1]) {
-        return *_ptr;
+    if(_container._len == 0){
+        throw std::out_of_range("Out of range");
     }
-    return _container._sortedData[0];
+    if(*this == this->end()) {
+        throw std::out_of_range("Out of range");
+    }
+    return *_ptr;
 
 }
 
@@ -103,6 +107,9 @@ bool MagicalContainer::AscendingIterator::operator>(const MagicalContainer::Asce
 }
 
 MagicalContainer::AscendingIterator &MagicalContainer::AscendingIterator::operator++() {
+    if(*this == this->end()){
+        throw std::out_of_range("Out of range");
+    }
     _ptr++;
     return *this;
 }
@@ -116,11 +123,13 @@ MagicalContainer::AscendingIterator MagicalContainer::AscendingIterator::end() {
 }
 
 int &MagicalContainer::PrimeIterator::operator*() {
-    if(_ptr != &_container._primeData[_container._primeData.size()-1]) {
-        return *_ptr;
+    if(_container._len == 0){
+        throw std::out_of_range("Out of range");
     }
-
-    return _container._sortedData[0];
+    if(*this == this->end()) {
+        throw std::out_of_range("Out of range");
+    }
+    return *_ptr;
 }
 
 bool MagicalContainer::PrimeIterator::operator==(const MagicalContainer::PrimeIterator &other) const {
@@ -140,6 +149,9 @@ bool MagicalContainer::PrimeIterator::operator>(const MagicalContainer::PrimeIte
 }
 
 MagicalContainer::PrimeIterator &MagicalContainer::PrimeIterator::operator++() {
+    if(*this == this->end()){
+        throw std::out_of_range("Out of range");
+    }
     _ptr++;
     return *this;
 }
@@ -153,10 +165,13 @@ MagicalContainer::PrimeIterator MagicalContainer::PrimeIterator::end() {
 }
 
 int &MagicalContainer::SideCrossIterator::operator*() {
-    if(_ptr != &_container._sortedData[_container._len/2]) {
-        return *_ptr;
+    if(_container._len == 0){
+        throw std::out_of_range("Out of range");
     }
-    return _container._sortedData[0];
+    if(*this == this->end()) {
+        throw std::out_of_range("Out of range");
+    }
+    return *_ptr;
 }
 
 bool MagicalContainer::SideCrossIterator::operator==(const MagicalContainer::SideCrossIterator &other) const {
@@ -176,6 +191,10 @@ bool MagicalContainer::SideCrossIterator::operator>(const MagicalContainer::Side
 }
 
 MagicalContainer::SideCrossIterator &MagicalContainer::SideCrossIterator::operator++() {
+    if(*this == this->end()){
+        throw std::out_of_range("Out of range");
+    }
+
     unsigned long nextElement = static_cast<unsigned long>(_nextElement);
     if (_ptr == &_container._sortedData[_container._len / 2]) {
         _ptr = &_container._sortedData[_container._len - 1] + 1;

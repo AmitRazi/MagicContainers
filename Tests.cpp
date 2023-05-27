@@ -1,5 +1,6 @@
 #pragma once
 #include <stdexcept>
+#include <iostream>
 #include "doctest.h"
 #include "sources/MagicalContainer.hpp"
 
@@ -44,8 +45,12 @@ TEST_SUITE("Iterators Tests") {
 
     TEST_CASE("Derefernce with an empty container") {
         CHECK_THROWS_AS(*ascIter, std::out_of_range);
+        std::cout<<*sideIter<<"\n";
         CHECK_THROWS_AS(*primeIter, std::out_of_range);
+        std::cout<<*sideIter<<"\n";
         CHECK_THROWS_AS(*sideIter, std::out_of_range);
+        std::cout<<*sideIter<<"\n";
+
     }
 
     TEST_CASE("begin() and end() with an empty container") {
