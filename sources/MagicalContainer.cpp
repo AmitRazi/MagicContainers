@@ -23,8 +23,9 @@ void MagicalContainer::addElement(int element) {
 }
 
 void MagicalContainer::removeElement(int num) {
-    unsigned long index = findIndex(num);
+    int index = findIndex(num);
     if(index != -1) {
+        index = static_cast<unsigned long>(index);
         removePrime(_data[index]);
         removeSorted(_data[index]);
         _data.erase(_data.begin() + index);
