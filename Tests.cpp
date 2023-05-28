@@ -1,4 +1,3 @@
-/*
 #include <stdexcept>
 #include <iostream>
 #include "doctest.h"
@@ -255,4 +254,3 @@ TEST_SUITE("Iterators Tests") {
  }
 }
 
-*/
