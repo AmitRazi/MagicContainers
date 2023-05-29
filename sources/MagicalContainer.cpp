@@ -2,16 +2,13 @@
 // Created by 97250 on 24/05/2023.
 //
 
-#include "MagicalContainer.h"
+#include "MagicalContainer.hpp"
 #include <cmath>
 #include <algorithm>
 #include <vector>
 #include <stdexcept>
 
 bool MagicalContainer::isPrime(int &num) {
-    if(num < 2){
-        return false;
-    }
     for (int i = 2; i <= sqrt(num); i++) {
         if (num % i == 0) {
             return false;
@@ -25,7 +22,6 @@ void MagicalContainer::addElement(int element) {
     addPrime(element);
     addSorted(element);
     _len++;
-    _modificationNum++;
 }
 
 void MagicalContainer::removeElement(int num) {
@@ -36,7 +32,6 @@ void MagicalContainer::removeElement(int num) {
         removeSorted(_data.at(uIndex));
         _data.erase(_data.begin() + (index));
         _len--;
-        _modificationNum--;
     }
 }
 
@@ -68,8 +63,8 @@ void MagicalContainer::removePrime(int &num) {
 }
 
 void MagicalContainer::removeSorted(int &num) {
-    auto deletePosition = std::find(_sortedData.begin(), _sortedData.end(), num);
-    if (deletePosition != _sortedData.end()) {
+    auto deletePosition = std::upper_bound(_sortedData.begin(), _sortedData.end(), num);
+    if (deletePosition != _sortedData.end() && *deletePosition == num) {
         _sortedData.erase(deletePosition);
     }
 
@@ -84,146 +79,120 @@ int MagicalContainer::getModifications() {
 }
 
 
-int &AscendingIterator::operator*() {
+int &MagicalContainer::AscendingIterator::operator*() {
     if(_container._len == 0){
         throw std::out_of_range("Out of range");
     }
     if(*this == this->end()) {
         throw std::out_of_range("Out of range");
     }
-
-    if(_ptr == nullptr){
-        _ptr = &_container._sortedData.at(0);
-    }
-
     return *_ptr;
 
 }
 
-bool AscendingIterator::operator==(const AscendingIterator &other) const {
+bool MagicalContainer::AscendingIterator::operator==(const MagicalContainer::AscendingIterator &other) const {
     return _ptr == other._ptr;
 }
 
-bool AscendingIterator::operator!=(const AscendingIterator &other) const {
+bool MagicalContainer::AscendingIterator::operator!=(const MagicalContainer::AscendingIterator &other) const {
     return !(_ptr == other._ptr);
 }
 
-bool AscendingIterator::operator<(const AscendingIterator &other) const {
+bool MagicalContainer::AscendingIterator::operator<(const MagicalContainer::AscendingIterator &other) const {
     return (_ptr < other._ptr);
 }
 
-bool AscendingIterator::operator>(const AscendingIterator &other) const {
+bool MagicalContainer::AscendingIterator::operator>(const MagicalContainer::AscendingIterator &other) const {
     return (_ptr > other._ptr);
 }
 
-AscendingIterator &AscendingIterator::operator++() {
+MagicalContainer::AscendingIterator &MagicalContainer::AscendingIterator::operator++() {
     if(*this == this->end()){
         throw std::out_of_range("Out of range");
     }
-
-    if(_ptr == nullptr){
-        _ptr = &_container._sortedData.at(0);
-    }
-
     _ptr++;
     return *this;
 }
 
-AscendingIterator AscendingIterator::begin() {
-    return AscendingIterator{_container};
+MagicalContainer::AscendingIterator MagicalContainer::AscendingIterator::begin() {
+    return MagicalContainer::AscendingIterator{_container};
 }
 
-AscendingIterator AscendingIterator::end() {
-    return AscendingIterator{_container, &_container._sortedData[_container._len - 1] + 1};
+MagicalContainer::AscendingIterator MagicalContainer::AscendingIterator::end() {
+    return MagicalContainer::AscendingIterator{_container, &_container._sortedData[_container._len - 1] + 1};
 }
 
-int &PrimeIterator::operator*() {
+int &MagicalContainer::PrimeIterator::operator*() {
     if(_container._len == 0){
         throw std::out_of_range("Out of range");
     }
     if(*this == this->end()) {
         throw std::out_of_range("Out of range");
     }
-
-    if(_ptr == nullptr && _container._primeData.size() > 0){
-        _ptr = &_container._primeData.at(0);
-    }
     return *_ptr;
 }
 
-bool PrimeIterator::operator==(const PrimeIterator &other) const {
+bool MagicalContainer::PrimeIterator::operator==(const MagicalContainer::PrimeIterator &other) const {
     return _ptr == other._ptr;
 }
 
-bool PrimeIterator::operator!=(const PrimeIterator &other) const {
+bool MagicalContainer::PrimeIterator::operator!=(const MagicalContainer::PrimeIterator &other) const {
     return !(_ptr == other._ptr);
 }
 
-bool PrimeIterator::operator<(const PrimeIterator &other) const {
+bool MagicalContainer::PrimeIterator::operator<(const MagicalContainer::PrimeIterator &other) const {
     return (_ptr < other._ptr);
 }
 
-bool PrimeIterator::operator>(const PrimeIterator &other) const {
+bool MagicalContainer::PrimeIterator::operator>(const MagicalContainer::PrimeIterator &other) const {
     return (_ptr > other._ptr);
 }
 
-PrimeIterator &PrimeIterator::operator++() {
+MagicalContainer::PrimeIterator &MagicalContainer::PrimeIterator::operator++() {
     if(*this == this->end()){
         throw std::out_of_range("Out of range");
     }
-
-    if(_ptr == nullptr && _container._primeData.size() > 0){
-        _ptr = &_container._primeData.at(0);
-    }
-
     _ptr++;
     return *this;
 }
 
-PrimeIterator PrimeIterator::begin() {
-    return PrimeIterator{_container};
+MagicalContainer::PrimeIterator MagicalContainer::PrimeIterator::begin() {
+    return MagicalContainer::PrimeIterator{_container};
 }
 
-PrimeIterator PrimeIterator::end() {
-    return PrimeIterator{_container, &_container._primeData[_container._primeData.size() - 1] + 1};
+MagicalContainer::PrimeIterator MagicalContainer::PrimeIterator::end() {
+    return MagicalContainer::PrimeIterator{_container, &_container._primeData[_container._primeData.size() - 1] + 1};
 }
 
-int &SideCrossIterator::operator*() {
+int &MagicalContainer::SideCrossIterator::operator*() {
     if(_container._len == 0){
         throw std::out_of_range("Out of range");
     }
     if(*this == this->end()) {
         throw std::out_of_range("Out of range");
     }
-    if(_ptr == nullptr){
-        _ptr = &_container._sortedData.at(0);
-    }
     return *_ptr;
 }
 
-bool SideCrossIterator::operator==(const SideCrossIterator &other) const {
+bool MagicalContainer::SideCrossIterator::operator==(const MagicalContainer::SideCrossIterator &other) const {
     return _ptr == other._ptr;
 }
 
-bool SideCrossIterator::operator!=(const SideCrossIterator &other) const {
+bool MagicalContainer::SideCrossIterator::operator!=(const MagicalContainer::SideCrossIterator &other) const {
     return !(_ptr == other._ptr);
 }
 
-bool SideCrossIterator::operator<(const SideCrossIterator &other) const {
+bool MagicalContainer::SideCrossIterator::operator<(const MagicalContainer::SideCrossIterator &other) const {
     return (_ptr < other._ptr);
 }
 
-bool SideCrossIterator::operator>(const SideCrossIterator &other) const {
+bool MagicalContainer::SideCrossIterator::operator>(const MagicalContainer::SideCrossIterator &other) const {
     return (_ptr > other._ptr);
 }
 
-SideCrossIterator &SideCrossIterator::operator++() {
+MagicalContainer::SideCrossIterator &MagicalContainer::SideCrossIterator::operator++() {
     if(*this == this->end()){
         throw std::out_of_range("Out of range");
-    }
-
-    if(_ptr == nullptr){
-        _ptr = &_container._sortedData.at(0);
     }
 
     unsigned long nextElement = static_cast<unsigned long>(_nextElement);
@@ -243,10 +212,10 @@ SideCrossIterator &SideCrossIterator::operator++() {
     return *this;
 }
 
-SideCrossIterator SideCrossIterator::begin() {
-    return SideCrossIterator{_container};
+MagicalContainer::SideCrossIterator MagicalContainer::SideCrossIterator::begin() {
+    return MagicalContainer::SideCrossIterator{_container};
 }
 
-SideCrossIterator SideCrossIterator::end() {
-    return SideCrossIterator{_container, &_container._sortedData[_container._len - 1] + 1};
+MagicalContainer::SideCrossIterator MagicalContainer::SideCrossIterator::end() {
+    return MagicalContainer::SideCrossIterator{_container, &_container._sortedData[_container._len - 1] + 1};
 }

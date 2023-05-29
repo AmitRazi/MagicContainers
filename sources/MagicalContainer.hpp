@@ -2,11 +2,12 @@
 // Created by 97250 on 24/05/2023.
 //
 
-#ifndef MAGICCONTAINERS_MAGICALCONTAINER_H
-#define MAGICCONTAINERS_MAGICALCONTAINER_H
+#ifndef MAGICCONTAINERS_MAGICALCONTAINER_HPP
+#define MAGICCONTAINERS_MAGICALCONTAINER_HPP
 
 
 #include <vector>
+
 
 class MagicalContainer {
 private:
@@ -40,14 +41,14 @@ public:
 
     static bool isPrime(int &);
 
-    friend class AscendingIterator;
+    class AscendingIterator;
 
-    friend class SideCrossIterator;
+    class SideCrossIterator;
 
-    friend class PrimeIterator;
+    class PrimeIterator;
 };
 
-class AscendingIterator {
+class MagicalContainer::AscendingIterator {
 private:
     MagicalContainer &_container;
     int *_ptr;
@@ -81,7 +82,7 @@ public:
     AscendingIterator end();
 };
 
-class PrimeIterator {
+class MagicalContainer::PrimeIterator {
 private:
     MagicalContainer &_container;
     int *_ptr;
@@ -115,7 +116,7 @@ public:
     PrimeIterator end();
 };
 
-class SideCrossIterator {
+class MagicalContainer::SideCrossIterator {
 private:
     MagicalContainer &_container;
     int *_ptr;
@@ -154,4 +155,4 @@ public:
 };
 
 
-#endif //MAGICCONTAINERS_MAGICALCONTAINER_H
+#endif //MAGICCONTAINERS_MAGICALCONTAINER_HPP
