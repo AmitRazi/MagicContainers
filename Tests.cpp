@@ -1,7 +1,7 @@
 #include <stdexcept>
 #include <iostream>
 #include "doctest.h"
-#include "sources/MagicalContainer.hpp"
+#include "sources/MagicalContainer.h"
 
 
 TEST_SUITE("Container Tests") {
