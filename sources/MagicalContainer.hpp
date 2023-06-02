@@ -8,151 +8,155 @@
 
 #include <vector>
 
+namespace ariel {
+    class MagicalContainer {
+    private:
+        std::vector<int*> _sortedData;
+        std::vector<int*> _primeData;
 
-class MagicalContainer {
-private:
-    std::vector<int> _data;
-    std::vector<int> _sortedData;
-    std::vector<int> _primeData;
+        unsigned long _len;
+        int _modificationNum = 0;
 
-    unsigned long _len;
-    int _modificationNum = 0;
+        int getModifications();
 
-    int getModifications();
+        void addPrime(int *num);
 
-    void addPrime(int &num);
+        void addSorted(int *num);
 
-    void addSorted(int &num);
+        void removePrime(int *num);
 
-    void removePrime(int &num);
+        void removeSorted(int *num);
 
-    void removeSorted(int &num);
+        unsigned long findIndex(int num);
 
-    int findIndex(int &num);
+    public:
+        MagicalContainer() : _len(0), _modificationNum(0) {};
 
-public:
-    MagicalContainer() : _len(0), _modificationNum(0) {};
+        ~MagicalContainer();
 
-    void addElement(int);
+        void addElement(int);
 
-    void removeElement(int);
+        void removeElement(int);
 
-    int size() const;
+        int size() const;
 
-    static bool isPrime(int &);
+        static bool isPrime(int &);
 
-    class AscendingIterator;
+        class AscendingIterator;
 
-    class SideCrossIterator;
+        class SideCrossIterator;
 
-    class PrimeIterator;
-};
+        class PrimeIterator;
+    };
 
-class MagicalContainer::AscendingIterator {
-private:
-    MagicalContainer &_container;
-    int *_ptr;
-    int _modificationNum;
+    class MagicalContainer::AscendingIterator {
+    private:
+        MagicalContainer &_container;
+        int **_ptr;
+        int _modificationNum;
 
-    AscendingIterator(MagicalContainer &container, int *pos) : _container(container), _ptr(pos),
+        AscendingIterator(MagicalContainer &container, int **pos) : _container(container), _ptr(pos),
+                                                                   _modificationNum(container._modificationNum) {};
+    public:
+        explicit AscendingIterator(MagicalContainer &container) : _container(container),
+                                                                  _ptr(container._sortedData.empty() ? nullptr
+                                                                                                     : &container._sortedData.at(
+                                                                                  0)),
+                                                                  _modificationNum(container.getModifications()) {};
+
+        AscendingIterator(const AscendingIterator &other) : _container(other._container), _ptr(other._ptr),
+                                                            _modificationNum(other._modificationNum) {};
+
+        bool operator==(const AscendingIterator &other) const;
+
+        bool operator!=(const AscendingIterator &other) const;
+
+        bool operator<(const AscendingIterator &other) const;
+
+        bool operator>(const AscendingIterator &other) const;
+
+        int &operator*();
+
+
+        AscendingIterator &operator++();
+
+        AscendingIterator begin();
+
+        AscendingIterator end();
+    };
+
+    class MagicalContainer::PrimeIterator {
+    private:
+        MagicalContainer &_container;
+        int **_ptr;
+        int _modificationNum;
+
+        PrimeIterator(MagicalContainer &container, int **pos) : _container(container), _ptr(pos),
                                                                _modificationNum(container._modificationNum) {};
-public:
-    explicit AscendingIterator(MagicalContainer &container) : _container(container),
-                                                              _ptr(container._sortedData.empty() ? nullptr
-                                                                                                 : &container._sortedData.at(
+    public:
+        explicit PrimeIterator(MagicalContainer &container) : _container(container),
+                                                              _ptr(container._primeData.empty() ? nullptr
+                                                                                                : &container._primeData.at(
                                                                               0)),
                                                               _modificationNum(container.getModifications()) {};
 
-    AscendingIterator(const AscendingIterator &other) : _container(other._container),_ptr(other._ptr),_modificationNum(other._modificationNum){};
+        PrimeIterator(PrimeIterator &other) = default;
 
-    bool operator==(const AscendingIterator &other) const;
+        bool operator==(const PrimeIterator &other) const;
 
-    bool operator!=(const AscendingIterator &other)const;
+        bool operator!=(const PrimeIterator &other) const;
 
-    bool operator<(const AscendingIterator &other)const;
+        bool operator<(const PrimeIterator &other) const;
 
-    bool operator>(const AscendingIterator &other)const;
+        bool operator>(const PrimeIterator &other) const;
 
-    int &operator*();
+        int &operator*();
 
-    AscendingIterator &operator++();
+        PrimeIterator &operator++();
 
-    AscendingIterator begin();
+        PrimeIterator begin();
 
-    AscendingIterator end();
-};
+        PrimeIterator end();
+    };
 
-class MagicalContainer::PrimeIterator {
-private:
-    MagicalContainer &_container;
-    int *_ptr;
-    int _modificationNum;
+    class MagicalContainer::SideCrossIterator {
+    private:
+        MagicalContainer &_container;
+        int **_ptr;
+        int _modificationNum;
+        int _nextElement;
+        bool _sideFlag;
 
-    PrimeIterator(MagicalContainer &container, int *pos) : _container(container), _ptr(pos),
-                                                           _modificationNum(container._modificationNum) {};
-public:
-    explicit PrimeIterator(MagicalContainer &container) : _container(container),
-                                                          _ptr(container._primeData.empty() ? nullptr
-                                                                                            : &container._primeData.at(
-                                                                          0)),
-                                                          _modificationNum(container.getModifications()) {};
+        SideCrossIterator(MagicalContainer &container, int **pos) : _container(container), _ptr(pos),
+                                                                   _modificationNum(container._modificationNum),
+                                                                   _nextElement(0), _sideFlag(false) {};
+    public:
+        explicit SideCrossIterator(MagicalContainer &container) : _container(container),
+                                                                  _ptr(container._sortedData.empty() ? nullptr
+                                                                                                     : &container._sortedData.at(
+                                                                                  0)),
+                                                                  _modificationNum(container.getModifications()),
+                                                                  _nextElement(0), _sideFlag(false) {};
 
-    PrimeIterator(PrimeIterator &other) = default;
-
-    bool operator==(const PrimeIterator &other)const;
-
-    bool operator!=(const PrimeIterator &other)const;
-
-    bool operator<(const PrimeIterator &other)const;
-
-    bool operator>(const PrimeIterator &other)const;
-
-    int &operator*();
-
-    PrimeIterator &operator++();
-
-    PrimeIterator begin();
-
-    PrimeIterator end();
-};
-
-class MagicalContainer::SideCrossIterator {
-private:
-    MagicalContainer &_container;
-    int *_ptr;
-    int _modificationNum;
-    int _nextElement;
-    bool _sideFlag;
-
-    SideCrossIterator(MagicalContainer &container, int *pos) : _container(container), _ptr(pos),
-                                                               _modificationNum(container._modificationNum),
-                                                               _nextElement(0), _sideFlag(false) {};
-public:
-    explicit SideCrossIterator(MagicalContainer &container) : _container(container),
-                                                              _ptr(container._sortedData.empty() ? nullptr
-                                                                                                 : &container._sortedData.at(
-                                                                              0)),
-                                                              _modificationNum(container.getModifications()),
-                                                              _nextElement(0), _sideFlag(false) {};
-
-    SideCrossIterator(SideCrossIterator &other) = default;
-
-    bool operator==(const SideCrossIterator &other) const;
-
-    bool operator!=(const SideCrossIterator &other) const;
-
-    bool operator<(const SideCrossIterator &other) const;
-
-    bool operator>(const SideCrossIterator &other) const;
-
-    int &operator*();
-
-    SideCrossIterator &operator++();
-
-    SideCrossIterator begin();
-
-    SideCrossIterator end();
-};
+        SideCrossIterator(SideCrossIterator &other) = default;
 
 
+        bool operator==(const SideCrossIterator &other) const;
+
+        bool operator!=(const SideCrossIterator &other) const;
+
+        bool operator<(const SideCrossIterator &other) const;
+
+        bool operator>(const SideCrossIterator &other) const;
+
+        int &operator*();
+
+        SideCrossIterator &operator++();
+
+        SideCrossIterator begin();
+
+        SideCrossIterator end();
+    };
+
+}
 #endif //MAGICCONTAINERS_MAGICALCONTAINER_HPP

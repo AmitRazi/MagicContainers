@@ -7,7 +7,13 @@
 #include <algorithm>
 #include <vector>
 #include <stdexcept>
+using namespace ariel;
 
+MagicalContainer::~MagicalContainer(){
+    for(auto i = 0 ; i < _len ; i++){
+        delete _sortedData.at(i);
+    }
+}
 bool MagicalContainer::isPrime(int &num) {
     for (int i = 2; i <= sqrt(num); i++) {
         if (num % i == 0) {
@@ -18,54 +24,92 @@ bool MagicalContainer::isPrime(int &num) {
 }
 
 void MagicalContainer::addElement(int element) {
-    _data.emplace_back(element);
-    addPrime(element);
-    addSorted(element);
+    unsigned long index = findIndex(element);
+    if(index != -1) return;
+
+    int *num = new int(element);
+
+    addSorted(num);
+    if(isPrime(element)) {
+        addPrime(num);
+    }
     _len++;
 }
 
 void MagicalContainer::removeElement(int num) {
-    int index = findIndex(num);
+    unsigned long index = findIndex(num);
     if (index != -1) {
-        unsigned long uIndex = static_cast<unsigned long>(index);
-        removePrime(_data.at(uIndex));
-        removeSorted(_data.at(uIndex));
-        _data.erase(_data.begin() + (index));
+        removePrime(_sortedData.at(index));
+        removeSorted(_sortedData.at(index));
         _len--;
     }
 }
 
-int MagicalContainer::findIndex(int &num) {
-    auto position = std::find(_data.begin(), _data.end(), num);
-    if (position != _data.end()) {
-        return static_cast<int>(std::distance(_data.begin(), position));
+unsigned long MagicalContainer::findIndex(int num) {
+    unsigned long index = 0;
+
+    for(int *element: _sortedData){
+        if(*element == num){
+            break;
+        }
+        index++;
+    }
+
+    auto position = _sortedData.begin()+index;
+
+    if (position != _sortedData.end()) {
+        return (std::distance(_sortedData.begin(), position));
     }
 
     return -1;
 }
 
-void MagicalContainer::addPrime(int &num) {
-    if (isPrime(num)) {
-        _primeData.emplace_back(num);
-    }
+void MagicalContainer::addPrime(int *num) {
+    _primeData.push_back(num);
 }
 
-void MagicalContainer::addSorted(int &num) {
-    auto insertPosition = std::upper_bound(_sortedData.begin(), _sortedData.end(), num);
+void MagicalContainer::addSorted(int *num) {
+    unsigned long index = 0;
+    for(int *element: _sortedData){
+        if(*element > *num){
+            break;
+        }
+        index++;
+    }
+
+    auto insertPosition = _sortedData.begin()+index;
     _sortedData.insert(insertPosition, num);
 }
 
-void MagicalContainer::removePrime(int &num) {
-    auto position = std::find(_primeData.begin(), _primeData.end(), num);
+void MagicalContainer::removePrime(int *num) {
+    unsigned long index = 0;
+    for(auto &element: _primeData){
+        if(*element = *num){
+           break;
+        }
+        index++;
+    }
+
+    auto position = _primeData.begin()+index;
     if (position != _primeData.end()) {
         _primeData.erase(position);
     }
 }
 
-void MagicalContainer::removeSorted(int &num) {
-    auto deletePosition = std::upper_bound(_sortedData.begin(), _sortedData.end(), num);
-    if (deletePosition != _sortedData.end() && *deletePosition == num) {
+void MagicalContainer::removeSorted(int *num) {
+    unsigned long index = 0;
+    for(auto &element: _primeData){
+        if(*element = *num){
+            break;
+        }
+        index++;
+    }
+
+    auto deletePosition = _sortedData.begin()+index;
+
+    if (deletePosition != _sortedData.end()) {
         _sortedData.erase(deletePosition);
+        delete *deletePosition;
     }
 
 }
@@ -86,8 +130,7 @@ int &MagicalContainer::AscendingIterator::operator*() {
     if(*this == this->end()) {
         throw std::out_of_range("Out of range");
     }
-    return *_ptr;
-
+    return **_ptr;
 }
 
 bool MagicalContainer::AscendingIterator::operator==(const MagicalContainer::AscendingIterator &other) const {
@@ -129,7 +172,7 @@ int &MagicalContainer::PrimeIterator::operator*() {
     if(*this == this->end()) {
         throw std::out_of_range("Out of range");
     }
-    return *_ptr;
+    return **_ptr;
 }
 
 bool MagicalContainer::PrimeIterator::operator==(const MagicalContainer::PrimeIterator &other) const {
@@ -171,7 +214,7 @@ int &MagicalContainer::SideCrossIterator::operator*() {
     if(*this == this->end()) {
         throw std::out_of_range("Out of range");
     }
-    return *_ptr;
+    return **_ptr;
 }
 
 bool MagicalContainer::SideCrossIterator::operator==(const MagicalContainer::SideCrossIterator &other) const {
