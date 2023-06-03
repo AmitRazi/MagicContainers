@@ -16,7 +16,6 @@ namespace ariel {
         std::vector<int *> _primeData;
 
         unsigned long _len;
-        int _modificationNum = 0;
 
         int getModifications();
 
@@ -28,10 +27,10 @@ namespace ariel {
 
         void removeSorted(const int *num);
 
-        unsigned long findIndex(int num);
+        long findIndex(int num);
 
     public:
-        MagicalContainer() : _len(0), _modificationNum(0) {};
+        MagicalContainer() : _len(0){};
 
         ~MagicalContainer();
 
@@ -66,6 +65,11 @@ namespace ariel {
         bool operator<(const customIterator &other) const;
 
         bool operator>(const customIterator &other) const;
+
+        MagicalContainer &getContainer() const;
+        int** getPosition() const;
+
+        customIterator &operator=(const customIterator &);
 
     };
 
@@ -114,7 +118,7 @@ namespace ariel {
 
     class MagicalContainer::SideCrossIterator : public customIterator {
     private:
-        int _nextElement;
+        unsigned long _nextElement;
         bool _sideFlag;
 
         SideCrossIterator(MagicalContainer &container, int **pos) : customIterator(container,
@@ -136,6 +140,8 @@ namespace ariel {
         SideCrossIterator begin();
 
         SideCrossIterator end();
+
+        SideCrossIterator &operator=(SideCrossIterator &);
     };
 
 }
