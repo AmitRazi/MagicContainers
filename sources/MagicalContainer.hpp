@@ -8,11 +8,12 @@
 
 #include <vector>
 
+
 namespace ariel {
     class MagicalContainer {
     private:
-        std::vector<int*> _sortedData;
-        std::vector<int*> _primeData;
+        std::vector<int *> _sortedData;
+        std::vector<int *> _primeData;
 
         unsigned long _len;
         int _modificationNum = 0;
@@ -23,9 +24,9 @@ namespace ariel {
 
         void addSorted(int *num);
 
-        void removePrime(int *num);
+        void removePrime(const int *num);
 
-        void removeSorted(int *num);
+        void removeSorted(const int *num);
 
         unsigned long findIndex(int num);
 
@@ -49,34 +50,38 @@ namespace ariel {
         class PrimeIterator;
     };
 
-    class MagicalContainer::AscendingIterator {
-    private:
+    class customIterator {
+    protected:
         MagicalContainer &_container;
         int **_ptr;
-        int _modificationNum;
 
-        AscendingIterator(MagicalContainer &container, int **pos) : _container(container), _ptr(pos),
-                                                                   _modificationNum(container._modificationNum) {};
+        customIterator(MagicalContainer &container, int **pos) : _container(container), _ptr(pos) {};
     public:
-        explicit AscendingIterator(MagicalContainer &container) : _container(container),
-                                                                  _ptr(container._sortedData.empty() ? nullptr
-                                                                                                     : &container._sortedData.at(
-                                                                                  0)),
-                                                                  _modificationNum(container.getModifications()) {};
+        virtual ~customIterator() = default; // add this line to make customIterator polymorphic
 
-        AscendingIterator(const AscendingIterator &other) : _container(other._container), _ptr(other._ptr),
-                                                            _modificationNum(other._modificationNum) {};
+        bool operator==(const customIterator &other) const;
 
-        bool operator==(const AscendingIterator &other) const;
+        bool operator!=(const customIterator &other) const;
 
-        bool operator!=(const AscendingIterator &other) const;
+        bool operator<(const customIterator &other) const;
 
-        bool operator<(const AscendingIterator &other) const;
+        bool operator>(const customIterator &other) const;
 
-        bool operator>(const AscendingIterator &other) const;
+    };
+
+    class MagicalContainer::AscendingIterator : public customIterator {
+    private:
+        AscendingIterator(MagicalContainer &container, int **pos) : customIterator(container,
+                                                                                   pos) {};
+    public:
+        AscendingIterator(MagicalContainer &container) : customIterator(container,
+                                                                        container._sortedData.empty()
+                                                                        ? nullptr
+                                                                        : &container._sortedData.at(0)) {};
+
+        AscendingIterator(const AscendingIterator &other) : customIterator(other._container, other._ptr) {};
 
         int &operator*();
-
 
         AscendingIterator &operator++();
 
@@ -85,30 +90,18 @@ namespace ariel {
         AscendingIterator end();
     };
 
-    class MagicalContainer::PrimeIterator {
+    class MagicalContainer::PrimeIterator : public customIterator {
     private:
-        MagicalContainer &_container;
-        int **_ptr;
-        int _modificationNum;
-
-        PrimeIterator(MagicalContainer &container, int **pos) : _container(container), _ptr(pos),
-                                                               _modificationNum(container._modificationNum) {};
+        PrimeIterator(MagicalContainer &container, int **pos) : customIterator(container,
+                                                                               pos) {};
     public:
-        explicit PrimeIterator(MagicalContainer &container) : _container(container),
-                                                              _ptr(container._primeData.empty() ? nullptr
-                                                                                                : &container._primeData.at(
-                                                                              0)),
-                                                              _modificationNum(container.getModifications()) {};
+        PrimeIterator(MagicalContainer &container) : customIterator(container,
+                                                                    container._primeData.empty()
+                                                                    ? nullptr
+                                                                    : &container._primeData.at(0)) {};
+
 
         PrimeIterator(PrimeIterator &other) = default;
-
-        bool operator==(const PrimeIterator &other) const;
-
-        bool operator!=(const PrimeIterator &other) const;
-
-        bool operator<(const PrimeIterator &other) const;
-
-        bool operator>(const PrimeIterator &other) const;
 
         int &operator*();
 
@@ -119,35 +112,22 @@ namespace ariel {
         PrimeIterator end();
     };
 
-    class MagicalContainer::SideCrossIterator {
+    class MagicalContainer::SideCrossIterator : public customIterator {
     private:
-        MagicalContainer &_container;
-        int **_ptr;
-        int _modificationNum;
         int _nextElement;
         bool _sideFlag;
 
-        SideCrossIterator(MagicalContainer &container, int **pos) : _container(container), _ptr(pos),
-                                                                   _modificationNum(container._modificationNum),
-                                                                   _nextElement(0), _sideFlag(false) {};
+        SideCrossIterator(MagicalContainer &container, int **pos) : customIterator(container,
+                                                                                   pos),
+                                                                    _nextElement(0), _sideFlag(false) {};
     public:
-        explicit SideCrossIterator(MagicalContainer &container) : _container(container),
-                                                                  _ptr(container._sortedData.empty() ? nullptr
-                                                                                                     : &container._sortedData.at(
-                                                                                  0)),
-                                                                  _modificationNum(container.getModifications()),
+        explicit SideCrossIterator(MagicalContainer &container) : customIterator(container,
+                                                                                 container._sortedData.empty()
+                                                                                 ? nullptr
+                                                                                 : &container._sortedData.at(0)),
                                                                   _nextElement(0), _sideFlag(false) {};
 
         SideCrossIterator(SideCrossIterator &other) = default;
-
-
-        bool operator==(const SideCrossIterator &other) const;
-
-        bool operator!=(const SideCrossIterator &other) const;
-
-        bool operator<(const SideCrossIterator &other) const;
-
-        bool operator>(const SideCrossIterator &other) const;
 
         int &operator*();
 
