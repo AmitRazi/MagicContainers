@@ -1,4 +1,3 @@
-/*
 #pragma once
 #include <stdexcept>
 #include <iostream>
@@ -262,4 +261,3 @@ TEST_SUITE("Iterators Tests") {
         CHECK_EQ(Iter,Iter.end());
     }
 }
-*/
