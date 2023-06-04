@@ -125,8 +125,11 @@ namespace ariel {
     }
 
     MagicalContainer::AscendingIterator &MagicalContainer::AscendingIterator::operator++() {
-        if (*this == this->end()) {
+        if (*this == this->end() || _container._sortedData.empty()) {
             throw std::runtime_error("Out of range");
+        }
+        if(_ptr == nullptr && !_container._sortedData.empty()){
+            _ptr = &_container._sortedData[0];
         }
         _ptr++;
         return *this;
@@ -138,14 +141,11 @@ namespace ariel {
 
     MagicalContainer::AscendingIterator MagicalContainer::AscendingIterator::end() {
         if (_container._sortedData.empty()) return MagicalContainer::AscendingIterator{_container};
-        return MagicalContainer::AscendingIterator{_container, &_container._sortedData[_container._len - 1] + 1};
+        return MagicalContainer::AscendingIterator{_container, &_container._sortedData[_container._len]};
     }
 
     int &MagicalContainer::PrimeIterator::operator*() {
-        if (_container._len == 0) {
-            throw std::runtime_error("Out of range");
-        }
-        if (*this == this->end()) {
+        if (*this == this->end() || _container._primeData.empty()) {
             throw std::runtime_error("Out of range");
         }
         return **_ptr;
@@ -155,6 +155,9 @@ namespace ariel {
     MagicalContainer::PrimeIterator &MagicalContainer::PrimeIterator::operator++() {
         if (*this == this->end()) {
             throw std::runtime_error("Out of range");
+        }
+        if(_ptr == nullptr && !_container._primeData.empty()){
+            _ptr = &_container._primeData[0];
         }
         _ptr++;
         return *this;
@@ -167,7 +170,7 @@ namespace ariel {
     MagicalContainer::PrimeIterator MagicalContainer::PrimeIterator::end() {
         if (_container._sortedData.empty()) return MagicalContainer::PrimeIterator{_container};
         return MagicalContainer::PrimeIterator{_container,
-                                               &_container._primeData[_container._primeData.size() - 1] + 1};
+                                               &_container._primeData[_container._primeData.size()]};
     }
 
     int &MagicalContainer::SideCrossIterator::operator*() {
@@ -212,8 +215,7 @@ namespace ariel {
         return MagicalContainer::SideCrossIterator{_container, &_container._sortedData[_container._len - 1] + 1};
     }
 
-    MagicalContainer::SideCrossIterator &
-    MagicalContainer::SideCrossIterator::operator=(MagicalContainer::SideCrossIterator &other) {
+    MagicalContainer::SideCrossIterator &MagicalContainer::SideCrossIterator::operator=(MagicalContainer::SideCrossIterator &other) {
         if (typeid(*this) != typeid(other)) {
             throw std::runtime_error("Cant assign iterators of different types");
         }

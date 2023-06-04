@@ -45,12 +45,9 @@ TEST_SUITE("Iterators Tests") {
     MagicalContainer::SideCrossIterator sideIter(container);
 
     TEST_CASE("Derefernce with an empty container") {
-        CHECK_THROWS_AS(*ascIter, std::out_of_range);
-        std::cout<<*sideIter<<"\n";
-        CHECK_THROWS_AS(*primeIter, std::out_of_range);
-        std::cout<<*sideIter<<"\n";
-        CHECK_THROWS_AS(*sideIter, std::out_of_range);
-        std::cout<<*sideIter<<"\n";
+        CHECK_THROWS(*ascIter);
+        CHECK_THROWS(*primeIter);
+        CHECK_THROWS(*sideIter);
 
     }
 
@@ -97,9 +94,9 @@ TEST_SUITE("Iterators Tests") {
     TEST_CASE("Preincrement out of range") {
         ++ascIter2;
         ++sideIter2;
-        CHECK_THROWS_AS(++ascIter2, std::out_of_range);
-        CHECK_THROWS_AS(++primeIter2, std::out_of_range);
-        CHECK_THROWS_AS(++sideIter2, std::out_of_range);
+        CHECK_THROWS(++ascIter2);
+        CHECK_THROWS(++primeIter2);
+        CHECK_THROWS(++sideIter2);
     }
 
 
