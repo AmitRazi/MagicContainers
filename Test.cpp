@@ -234,15 +234,6 @@ TEST_SUITE("Iterators Tests") {
     }
 
     TEST_CASE("primeIterator order"){
-        container2.addElement(17);
-        container2.addElement(2);
-        container2.addElement(25);
-        container2.addElement(9);
-        container2.addElement(3);
-        container2.addElement(15);
-        container2.addElement(1);
-        container2.addElement(29);
-        container2.addElement(3);
 
         auto Iter = sideIter.begin();
 
