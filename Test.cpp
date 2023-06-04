@@ -3,6 +3,7 @@
 #include <iostream>
 #include "doctest.h"
 #include "sources/MagicalContainer.hpp"
+
 using namespace ariel;
 
 TEST_SUITE("Container Tests") {

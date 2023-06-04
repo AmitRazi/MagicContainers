@@ -1,6 +1,5 @@
 #include <iostream>
 #include "sources/MagicalContainer.hpp"
-
 using namespace ariel;
 int main() {
     // Create a MagicalContainer and add some elements
