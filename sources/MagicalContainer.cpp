@@ -121,6 +121,11 @@ namespace ariel {
         if (*this == this->end()) {
             throw std::out_of_range("Out of range");
         }
+
+        if(_ptr == nullptr && !_container._sortedData.empty()){
+            _ptr = &_container._sortedData[0];
+        }
+
         return **_ptr;
     }
 
@@ -128,7 +133,7 @@ namespace ariel {
         if (*this == this->end() || _container._sortedData.empty()) {
             throw std::runtime_error("Out of range");
         }
-        if(_ptr == nullptr && !_container._sortedData.empty()){
+        if(_ptr == nullptr){
             _ptr = &_container._sortedData[0];
         }
         _ptr++;
@@ -148,6 +153,11 @@ namespace ariel {
         if (*this == this->end() || _container._primeData.empty()) {
             throw std::runtime_error("Out of range");
         }
+
+        if(_ptr == nullptr){
+            _ptr = &_container._primeData[0];
+        }
+
         return **_ptr;
     }
 
@@ -180,6 +190,11 @@ namespace ariel {
         if (*this == this->end()) {
             throw std::runtime_error("Out of range");
         }
+
+        if(_ptr == nullptr){
+            _ptr = &_container._sortedData[0];
+        }
+
         return **_ptr;
     }
 
