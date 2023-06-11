@@ -9,12 +9,6 @@
 
 namespace ariel {
 
-    MagicalContainer::~MagicalContainer() {
-        for (unsigned long i = 0; i < _len; i++) {
-            delete _sortedData.at(i);
-        }
-    }
-
     bool MagicalContainer::isPrime(int &num) {
         if (num < 2) {
             return false;
@@ -28,115 +22,47 @@ namespace ariel {
     }
 
     void MagicalContainer::addElement(int element) {
-        long index = findIndex(element);
-        if (index != -1) return;
-
-        int *num = new int(element);
-
-        addSorted(num);
-        if (isPrime(element)) {
-            addPrime(num);
+        if(isPrime(element)){
+            list.insertPrime(element);
+        } else{
+            list.insert(element);
         }
-        _len++;
+
     }
 
     void MagicalContainer::removeElement(int num) {
-        auto index = static_cast<unsigned long>(findIndex(num));
-
-        if (index == -1) {
-            throw std::runtime_error("Element does not exists"); // Silly, we should just ignore
-        }
-
-
-        removePrime(_sortedData.at(index));
-        removeSorted(_sortedData.at(index));
-        _len--;
-
-    }
-
-    long MagicalContainer::findIndex(int num) {
-        long index = 0;
-
-        for (int *element: _sortedData) {
-            if (*element == num) {
-                break;
-            }
-            index++;
-        }
-
-        auto position = _sortedData.begin() + index;
-
-        if (position != _sortedData.end()) {
-            return (std::distance(_sortedData.begin(), position));
-        }
-
-        return -1;
-    }
-
-    void MagicalContainer::addPrime(int *num) {
-        _primeData.push_back(num);
-    }
-
-    void MagicalContainer::addSorted(int *num) {
-        long index = 0;
-        for (int *element: _sortedData) {
-            if (*element > *num) {
-                break;
-            }
-            index++;
-        }
-
-        auto insertPosition = _sortedData.begin() + index;
-        _sortedData.insert(insertPosition, num);
-    }
-
-    void MagicalContainer::removePrime(const int *num) {
-        for (auto it = _primeData.begin(); it != _primeData.end(); ++it) {
-            if (*it == num) {
-                _primeData.erase(it);
-                break;
-            }
-        }
-    }
-
-
-    void MagicalContainer::removeSorted(const int *num) {
-        for (auto it = _sortedData.begin(); it != _sortedData.end(); ++it) {
-            if (*it == num) {
-                delete *it;
-                _sortedData.erase(it);
-                break;
-            }
-        }
+        list.remove(num);
     }
 
     int MagicalContainer::size() const {
-        return _len;
+        return list.getSize();
     }
 
-    int &MagicalContainer::AscendingIterator::operator*() {
-        if (_container._len == 0) {
+    int MagicalContainer::AscendingIterator::operator*() {
+        if (_container.size() == 0) {
             throw std::out_of_range("Out of range");
         }
         if (*this == this->end()) {
             throw std::out_of_range("Out of range");
         }
 
-        if(_ptr == nullptr && !_container._sortedData.empty()){
-            _ptr = &_container._sortedData[0];
+        if(_current == nullptr && !_container.size() == 0){
+            _current = _container.list.getHead();
         }
-
-        return **_ptr;
+        int returnValue = _current->getNumber();
+        return returnValue;
     }
 
     MagicalContainer::AscendingIterator &MagicalContainer::AscendingIterator::operator++() {
-        if (*this == this->end() || _container._sortedData.empty()) {
+        if (_container.list.getTail() == _current || _container.size() == 0) {
             throw std::runtime_error("Out of range");
         }
-        if(_ptr == nullptr){
-            _ptr = &_container._sortedData[0];
+        if(_current == nullptr){
+            _current = _container.list.getHead();
         }
-        _ptr++;
+        else{
+            _current = _current->_nextAsc;
+        }
         return *this;
     }
 
@@ -145,31 +71,36 @@ namespace ariel {
     }
 
     MagicalContainer::AscendingIterator MagicalContainer::AscendingIterator::end() {
-        if (_container._sortedData.empty()) return MagicalContainer::AscendingIterator{_container};
-        return MagicalContainer::AscendingIterator{_container, &_container._sortedData[_container._len]};
+        if (_container.size() == 0){
+            return MagicalContainer::AscendingIterator{_container};
+        }
+
+        return MagicalContainer::AscendingIterator{_container, _container.list.getTail()};
     }
 
-    int &MagicalContainer::PrimeIterator::operator*() {
-        if (*this == this->end() || _container._primeData.empty()) {
+    int MagicalContainer::PrimeIterator::operator*() {
+        if (_container.list.getTail() == _current || _container.list.getPrimehead() == nullptr) {
             throw std::runtime_error("Out of range");
         }
 
-        if(_ptr == nullptr){
-            _ptr = &_container._primeData[0];
+        if(_current == nullptr){
+           _current = _container.list.getPrimehead();
         }
 
-        return **_ptr;
+        int returnValue = _current->getNumber();
+        return returnValue;
     }
 
 
     MagicalContainer::PrimeIterator &MagicalContainer::PrimeIterator::operator++() {
-        if (*this == this->end()) {
+        if (_container.list.getTail() == _current) {
             throw std::runtime_error("Out of range");
         }
-        if(_ptr == nullptr && !_container._primeData.empty()){
-            _ptr = &_container._primeData[0];
+        if(_current == nullptr && _container.list.getPrimehead() != nullptr){
+            _current = _container.list.getPrimehead();
+        } else{
+            _current = _current->_nextPrime;
         }
-        _ptr++;
         return *this;
     }
 
@@ -178,46 +109,35 @@ namespace ariel {
     }
 
     MagicalContainer::PrimeIterator MagicalContainer::PrimeIterator::end() {
-        if (_container._sortedData.empty()) return MagicalContainer::PrimeIterator{_container};
+        if (_container.size() == 0) return MagicalContainer::PrimeIterator{_container};
         return MagicalContainer::PrimeIterator{_container,
-                                               &_container._primeData[_container._primeData.size()]};
+                                               _container.list.getTail()};
     }
 
-    int &MagicalContainer::SideCrossIterator::operator*() {
-        if (_container._len == 0) {
+    int MagicalContainer::SideCrossIterator::operator*() {
+        if (_container.size() == 0) {
             throw std::runtime_error("Out of range");
         }
         if (*this == this->end()) {
             throw std::runtime_error("Out of range");
         }
 
-        if(_ptr == nullptr){
-            _ptr = &_container._sortedData[0];
+        if(_current == nullptr){
+            _current = _container.list.getHead();
         }
 
-        return **_ptr;
+        int returnValue = _current->getNumber();
+        return returnValue;
     }
 
 
     MagicalContainer::SideCrossIterator &MagicalContainer::SideCrossIterator::operator++() {
-        if (*this == this->end()) {
+        if(_container.size() == 0 || *this == this->end()){
             throw std::runtime_error("Out of range");
         }
 
-        auto nextElement = _nextElement;
-        if (_ptr == &_container._sortedData[_container._len / 2]) {
-            _ptr = &_container._sortedData[_container._len - 1] + 1;
-        } else if (_sideFlag) {
-            _ptr = &_container._sortedData[nextElement];
-            _sideFlag = !_sideFlag;
-        } else {
-            _ptr = &_container._sortedData[_container._len - nextElement - 1];
-            _sideFlag = !_sideFlag;
-        }
+        _current = _current->_nextCross;
 
-        if (_sideFlag) {
-            _nextElement++;
-        }
         return *this;
     }
 
@@ -226,41 +146,22 @@ namespace ariel {
     }
 
     MagicalContainer::SideCrossIterator MagicalContainer::SideCrossIterator::end() {
-        if (_container._sortedData.empty()) return MagicalContainer::SideCrossIterator{_container};
-        return MagicalContainer::SideCrossIterator{_container, &_container._sortedData[_container._len - 1] + 1};
+        if (_container.size() == 0) return MagicalContainer::SideCrossIterator{_container};
+        return MagicalContainer::SideCrossIterator{_container, _container.list.getTail()};
     }
-
-    MagicalContainer::SideCrossIterator &MagicalContainer::SideCrossIterator::operator=(MagicalContainer::SideCrossIterator &other) {
-        if (typeid(*this) != typeid(other)) {
-            throw std::runtime_error("Cant assign iterators of different types");
-        }
-
-        if (&this->getContainer() != &other.getContainer()) {
-            throw std::runtime_error("Container is different");
-        }
-
-        this->_ptr = other._ptr;
-        this->_sideFlag = other._sideFlag;
-        this->_nextElement = other._nextElement;
-
-        return *this;
-    }
-
 
     bool customIterator::operator==(const customIterator &other) const {
         if (typeid(*this) != typeid(other)) {
             throw std::runtime_error("Not the same iterator type");
         }
-
-        return this->_ptr == other._ptr;
+        return _current == other._current;
     }
 
     bool customIterator::operator!=(const customIterator &other) const {
         if (typeid(*this) != typeid(other)) {
             throw std::runtime_error("Not the same iterator type");
         }
-
-        return !(*this == other);
+        return _current != other._current;
     }
 
     bool customIterator::operator<(const customIterator &other) const {
@@ -268,7 +169,10 @@ namespace ariel {
             throw std::runtime_error("Not the same iterator type");
         }
 
-        return this->_ptr < other._ptr;
+        if(typeid(*this) == typeid(MagicalContainer::SideCrossIterator)){
+            return _current->_crossIndex < other._current->_crossIndex;
+        }
+        return _current->getNumber() < other._current->getNumber();
     }
 
     bool customIterator::operator>(const customIterator &other) const {
@@ -276,7 +180,11 @@ namespace ariel {
             throw std::runtime_error("Not the same iterator type");
         }
 
-        return this->_ptr > other._ptr;
+        if(typeid(*this) == typeid(MagicalContainer::SideCrossIterator)){
+            return _current->_crossIndex > other._current->_crossIndex;
+        }
+
+        return _current->getNumber() > other._current->getNumber();
     }
 
     customIterator &customIterator::operator=(const customIterator &other) {
@@ -288,16 +196,13 @@ namespace ariel {
             throw std::runtime_error("Container is different");
         }
 
-        this->_ptr = other._ptr;
+        _container = other._container;
+        _current = other._current;
 
         return *this;
     }
 
     MagicalContainer &customIterator::getContainer() const {
         return this->_container;
-    }
-
-    int **customIterator::getPosition() const {
-        return _ptr;
     }
 }

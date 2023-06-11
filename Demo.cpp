@@ -38,7 +38,7 @@ int main() {
     std::cout << std::endl;
 
     // Remove an element from the container and display the size
-    container.removeElement(9);
+    container.removeElement(3);
     std::cout << "Size of container after removing an element: " << container.size() << std::endl;
 
     return 0;

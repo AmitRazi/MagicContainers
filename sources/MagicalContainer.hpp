@@ -6,33 +6,15 @@
 #define MAGICCONTAINERS_MAGICALCONTAINER_HPP
 
 
-#include <vector>
-
+#include "LinkedList.hpp"
 
 namespace ariel {
     class MagicalContainer {
     private:
-        std::vector<int *> _sortedData;
-        std::vector<int *> _primeData;
-
-        unsigned long _len;
-
-        int getModifications();
-
-        void addPrime(int *num);
-
-        void addSorted(int *num);
-
-        void removePrime(const int *num);
-
-        void removeSorted(const int *num);
-
-        long findIndex(int num);
+        LinkedList list;
 
     public:
-        MagicalContainer() : _len(0){};
-
-        ~MagicalContainer();
+        MagicalContainer() {};
 
         void addElement(int);
 
@@ -52,11 +34,11 @@ namespace ariel {
     class customIterator {
     protected:
         MagicalContainer &_container;
-        int **_ptr;
+        Node *_current;
 
-        customIterator(MagicalContainer &container, int **pos) : _container(container), _ptr(pos) {};
+        customIterator(MagicalContainer &container, Node *node) : _container(container), _current(node) {};
     public:
-        virtual ~customIterator() = default; // add this line to make customIterator polymorphic
+        virtual ~customIterator() = default;
 
         bool operator==(const customIterator &other) const;
 
@@ -67,25 +49,20 @@ namespace ariel {
         bool operator>(const customIterator &other) const;
 
         MagicalContainer &getContainer() const;
-        int** getPosition() const;
 
         customIterator &operator=(const customIterator &);
-
     };
 
     class MagicalContainer::AscendingIterator : public customIterator {
     private:
-        AscendingIterator(MagicalContainer &container, int **pos) : customIterator(container,
-                                                                                   pos) {};
+        AscendingIterator(MagicalContainer &container, Node *node) : customIterator(container,
+                                                                                    node) {};
     public:
-        AscendingIterator(MagicalContainer &container) : customIterator(container,
-                                                                        container._sortedData.empty()
-                                                                        ? nullptr
-                                                                        : &container._sortedData.at(0)) {};
+        AscendingIterator(MagicalContainer &container) : customIterator(container, container.list.getHead()) {};
 
-        AscendingIterator(const AscendingIterator &other) : customIterator(other._container, other._ptr) {};
+        AscendingIterator(const AscendingIterator &other) = default;
 
-        int &operator*();
+        int operator*();
 
         AscendingIterator &operator++();
 
@@ -96,18 +73,14 @@ namespace ariel {
 
     class MagicalContainer::PrimeIterator : public customIterator {
     private:
-        PrimeIterator(MagicalContainer &container, int **pos) : customIterator(container,
-                                                                               pos) {};
+        PrimeIterator(MagicalContainer &container, Node *node) : customIterator(container,
+                                                                                node) {};
     public:
-        PrimeIterator(MagicalContainer &container) : customIterator(container,
-                                                                    container._primeData.empty()
-                                                                    ? nullptr
-                                                                    : &container._primeData.at(0)) {};
-
+        PrimeIterator(MagicalContainer &container) : customIterator(container, container.list.getPrimehead()) {};
 
         PrimeIterator(PrimeIterator &other) = default;
 
-        int &operator*();
+        int operator*();
 
         PrimeIterator &operator++();
 
@@ -118,22 +91,16 @@ namespace ariel {
 
     class MagicalContainer::SideCrossIterator : public customIterator {
     private:
-        unsigned long _nextElement;
-        bool _sideFlag;
 
-        SideCrossIterator(MagicalContainer &container, int **pos) : customIterator(container,
-                                                                                   pos),
-                                                                    _nextElement(0), _sideFlag(false) {};
+        SideCrossIterator(MagicalContainer &container, Node *node) : customIterator(container,
+                                                                                    node) {};
     public:
         explicit SideCrossIterator(MagicalContainer &container) : customIterator(container,
-                                                                                 container._sortedData.empty()
-                                                                                 ? nullptr
-                                                                                 : &container._sortedData.at(0)),
-                                                                  _nextElement(0), _sideFlag(false) {};
+                                                                                 container.list.getHead()) {};
 
         SideCrossIterator(SideCrossIterator &other) = default;
 
-        int &operator*();
+        int operator*();
 
         SideCrossIterator &operator++();
 
