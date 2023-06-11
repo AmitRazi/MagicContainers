@@ -35,6 +35,14 @@ namespace ariel {
         magicalLinkedList() : head(nullptr), primeHead(nullptr),
                               tail(new Node(INT_MAX, true, nullptr, nullptr, nullptr, nullptr, nullptr)), size(0) {};
 
+        ~magicalLinkedList(){
+            Node *prev;
+            while(head != nullptr){
+                prev = head;
+                head = head->_nextAsc;
+                delete prev;
+            }
+        }
         void insert(Node *node);
 
         void insertPrime(int num);

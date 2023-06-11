@@ -77,6 +77,9 @@ namespace ariel {
         }
 
         delete current;
+
+        reorganizeSideCross();
+
         size--;
     }
 
@@ -90,7 +93,7 @@ namespace ariel {
             return;
         }
 
-        node->_previous->_nextPrime = node->_nextPrime;
+        node->_previousPrime->_nextPrime = node->_nextPrime;
         if (node->_nextPrime != nullptr) {
             node->_nextPrime->_previousPrime = node->_previousPrime;
         }
@@ -107,7 +110,7 @@ namespace ariel {
         } else {
             if (primeHead->_number > num) {
                 node->_nextPrime = primeHead;
-                primeHead->_previous = node;
+                primeHead->_previousPrime = node;
                 primeHead = node;
                 insert(node);
                 return;
@@ -124,9 +127,9 @@ namespace ariel {
             }
 
             node->_nextPrime = temp->_nextPrime;
-            node->_previous = temp;
+            node->_previousPrime = temp;
             if (temp->_nextPrime != tail) {
-                temp->_nextPrime->_previous = node;
+                temp->_nextPrime->_previousPrime = node;
             }
             temp->_nextPrime = node;
 
