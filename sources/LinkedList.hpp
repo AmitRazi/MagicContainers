@@ -5,63 +5,71 @@
 #ifndef MAGICCONTAINERS_LINKEDLIST_HPP
 #define MAGICCONTAINERS_LINKEDLIST_HPP
 #include <memory>
+namespace ariel {
+    class Node {
+    public:
+        int _number;
+        bool _isPrime;
+        int _crossIndex;
+        Node *_nextAsc;
+        Node *_nextPrime;
+        Node *_nextCross;
+        Node *_previousPrime;
+        Node *_previous;
 
-class Node{
-public:
-    int _number;
-    bool _isPrime;
-    int _crossIndex;
-    Node *_nextAsc;
-    Node *_nextPrime;
-    Node *_nextCross;
-    Node *_previousPrime;
-    Node *_previous;
+        Node(int number, bool isPrime, Node *nextAsc, Node *nextPrime, Node *nextCross, Node *previous,
+             Node *previousPrime)
+                : _number(number), _isPrime(isPrime), _crossIndex(0), _nextAsc(nextAsc), _nextPrime(nextPrime),
+                  _nextCross(nextCross),
+                  _previous(previous), _previousPrime(previousPrime) {};
 
-    Node(int number,bool isPrime, Node *nextAsc, Node *nextPrime, Node* nextCross, Node *previous,Node *previousPrime)
-            : _number(number), _isPrime(isPrime), _crossIndex(0), _nextAsc(nextAsc), _nextPrime(nextPrime), _nextCross(nextCross),
-              _previous(previous), _previousPrime(previousPrime) {};
+        int getNumber() {
+            return _number;
+        }
 
-    int getNumber(){
-        return _number;
-    }
+    };
 
-};
+    class LinkedList {
+        Node *head;
+        Node *primeHead;
+        Node *tail;
+        int size;
 
-class LinkedList {
-    Node* head;
-    Node* primeHead;
-    Node* tail;
-    int size;
+        void reorganizeSideCross();
 
-    void reorganizeSideCross();
+    public:
+        LinkedList() : head(nullptr), primeHead(nullptr),
+                       tail(new Node(-1, true, nullptr, nullptr, nullptr, nullptr, nullptr)), size(0) {};
 
-public:
-    LinkedList() : head(nullptr), primeHead(nullptr),tail(new Node(-1,true,nullptr,nullptr,nullptr,nullptr,nullptr)), size(0){};
+        void insert(Node *node);
 
-    void insert(Node *node);
-    void insertPrime(const int num);
-    void insert(const int num);
-    void remove(const int num);
-    void removePrime(Node *node);
-    int getSize() const{
-        return size;
-    }
+        void insertPrime(const int num);
 
-    Node* getPrimehead() const{
-        return primeHead;
-    }
+        void insert(const int num);
 
-    Node* getHead() const{
-        return head;
-    }
+        void remove(const int num);
 
-    Node* getTail() const{
-        return tail;
-    }
+        void removePrime(Node *node);
+
+        int getSize() const {
+            return size;
+        }
+
+        Node *getPrimehead() const {
+            return primeHead;
+        }
+
+        Node *getHead() const {
+            return head;
+        }
+
+        Node *getTail() const {
+            return tail;
+        }
 
 
-};
-
+    };
+}
 
 
 #endif //MAGICCONTAINERS_LINKEDLIST_HPP

@@ -1,6 +1,5 @@
 
 #include <stdexcept>
-#include <iostream>
 #include "doctest.h"
 #include "sources/MagicalContainer.hpp"
 

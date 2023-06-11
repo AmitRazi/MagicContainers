@@ -46,7 +46,7 @@ namespace ariel {
             throw std::out_of_range("Out of range");
         }
 
-        if(_current == nullptr && !_container.size() == 0){
+        if(_current == nullptr && !(_container.size() == 0)){
             _current = _container.list.getHead();
         }
         int returnValue = _current->getNumber();

@@ -107,8 +107,6 @@ namespace ariel {
         SideCrossIterator begin();
 
         SideCrossIterator end();
-
-        SideCrossIterator &operator=(SideCrossIterator &);
     };
 
 }
