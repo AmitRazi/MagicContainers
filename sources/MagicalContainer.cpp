@@ -46,10 +46,10 @@ namespace ariel {
             throw std::out_of_range("Out of range");
         }
 
-        if(_current == nullptr && !(_container.size() == 0)){
+        if(_current == nullptr && _container.size() != 0){
             _current = _container.list.getHead();
         }
-        int returnValue = _current->getNumber();
+        int returnValue = _current->_number;
         return returnValue;
     }
 
@@ -87,7 +87,7 @@ namespace ariel {
             _current = _container.list.getPrimehead();
         }
 
-        int returnValue = _current->getNumber();
+        int returnValue = _current->_number;
         return returnValue;
     }
 
@@ -102,7 +102,7 @@ namespace ariel {
             throw std::runtime_error("Out of range");
         } else{
             _current = _current->_nextPrime;
-        };
+        }
         return *this;
     }
 
@@ -128,7 +128,7 @@ namespace ariel {
             _current = _container.list.getHead();
         }
 
-        int returnValue = _current->getNumber();
+        int returnValue = _current->_number;
         return returnValue;
     }
 
@@ -178,7 +178,7 @@ namespace ariel {
         if(other._current == nullptr){
             return false;
         }
-        return _current->getNumber() < other._current->getNumber();
+        return _current->_number < other._current->_number;
     }
 
     bool customIterator::operator>(const customIterator &other) const {
@@ -194,10 +194,14 @@ namespace ariel {
             return false;
         }
 
-        return _current->getNumber() > other._current->getNumber();
+        return _current->_number > other._current->_number;
     }
 
     customIterator &customIterator::operator=(const customIterator &other) {
+        if (this == &other) {
+            return *this;
+        }
+
         if (typeid(*this) != typeid(other)) {
             throw std::runtime_error("Cant assign iterators of different types");
         }

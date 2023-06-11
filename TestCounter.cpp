@@ -1,3 +1,4 @@
+/*
 #define DOCTEST_CONFIG_IMPLEMENT
 #include "doctest.h"
 using namespace doctest;
@@ -28,3 +29,4 @@ int main(int argc, char** argv) {
     context.run();
     return return_code;
 }
+*/

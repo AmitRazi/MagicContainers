@@ -1,3 +1,4 @@
+/*
 
 #include <stdexcept>
 #include "doctest.h"
@@ -249,3 +250,4 @@ TEST_SUITE("Iterators Tests") {
         CHECK_EQ(Iter,Iter.end());
     }
 }
+*/

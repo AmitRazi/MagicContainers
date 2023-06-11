@@ -6,8 +6,7 @@
 #define MAGICCONTAINERS_MAGICALLINKEDLIST_HPP
 #include <memory>
 namespace ariel {
-    class Node {
-    public:
+    struct Node {
         int _number;
         bool _isPrime;
         int _crossIndex;
@@ -22,11 +21,6 @@ namespace ariel {
                 : _number(number), _isPrime(isPrime), _crossIndex(0), _nextAsc(nextAsc), _nextPrime(nextPrime),
                   _nextCross(nextCross),
                   _previous(previous), _previousPrime(previousPrime) {};
-
-        int getNumber() {
-            return _number;
-        }
-
     };
 
     class magicalLinkedList {
@@ -43,11 +37,11 @@ namespace ariel {
 
         void insert(Node *node);
 
-        void insertPrime(const int num);
+        void insertPrime(int num);
 
-        void insert(const int num);
+        void insert(int num);
 
-        void remove(const int num);
+        void remove(int num);
 
         void removePrime(Node *node);
 
@@ -66,8 +60,6 @@ namespace ariel {
         Node *getTail() const {
             return tail;
         }
-
-
     };
 }
 

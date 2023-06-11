@@ -7,14 +7,14 @@
 
 
 #include "magicalLinkedList.hpp"
-
+using ariel::magicalLinkedList;
 namespace ariel {
     class MagicalContainer {
     private:
         magicalLinkedList list;
 
     public:
-        MagicalContainer() {};
+        MagicalContainer() = default;
 
         void addElement(int);
 
@@ -58,7 +58,7 @@ namespace ariel {
         AscendingIterator(MagicalContainer &container, Node *node) : customIterator(container,
                                                                                     node) {};
     public:
-        AscendingIterator(MagicalContainer &container) : customIterator(container, container.list.getHead()) {};
+        explicit AscendingIterator(MagicalContainer &container) : customIterator(container, container.list.getHead()) {};
 
         AscendingIterator(const AscendingIterator &other) = default;
 
@@ -76,7 +76,7 @@ namespace ariel {
         PrimeIterator(MagicalContainer &container, Node *node) : customIterator(container,
                                                                                 node) {};
     public:
-        PrimeIterator(MagicalContainer &container) : customIterator(container, container.list.getPrimehead()) {};
+        explicit PrimeIterator(MagicalContainer &container) : customIterator(container, container.list.getPrimehead()) {};
 
         PrimeIterator(PrimeIterator &other) = default;
 
