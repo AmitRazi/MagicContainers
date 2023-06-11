@@ -3,4 +3,4 @@ project(MagicContainers)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(MagicContainers sources/MagicalContainer.cpp sources/MagicalContainer.hpp Demo.cpp Test.cpp TestCounter.cpp sources/LinkedList.cpp sources/LinkedList.hpp)
+add_executable(MagicContainers sources/MagicalContainer.cpp sources/MagicalContainer.hpp Demo.cpp Test.cpp TestCounter.cpp sources/magicalLinkedList.cpp sources/magicalLinkedList.hpp)

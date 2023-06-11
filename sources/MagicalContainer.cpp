@@ -84,7 +84,7 @@ namespace ariel {
         }
 
         if(_current == nullptr){
-           _current = _container.list.getPrimehead();
+            _current = _container.list.getPrimehead();
         }
 
         int returnValue = _current->getNumber();
@@ -96,11 +96,13 @@ namespace ariel {
         if (_container.list.getTail() == _current) {
             throw std::runtime_error("Out of range");
         }
-        if(_current == nullptr && _container.list.getPrimehead() != nullptr){
+        if(_current == nullptr && _container.list.getPrimehead() != _container.list.getTail()){
             _current = _container.list.getPrimehead();
+        } else if(_container.list.getPrimehead() == _container.list.getTail()){
+            throw std::runtime_error("Out of range");
         } else{
             _current = _current->_nextPrime;
-        }
+        };
         return *this;
     }
 
@@ -172,6 +174,10 @@ namespace ariel {
         if(typeid(*this) == typeid(MagicalContainer::SideCrossIterator)){
             return _current->_crossIndex < other._current->_crossIndex;
         }
+
+        if(other._current == nullptr){
+            return false;
+        }
         return _current->getNumber() < other._current->getNumber();
     }
 
@@ -182,6 +188,10 @@ namespace ariel {
 
         if(typeid(*this) == typeid(MagicalContainer::SideCrossIterator)){
             return _current->_crossIndex > other._current->_crossIndex;
+        }
+
+        if(other._current == nullptr){
+            return false;
         }
 
         return _current->getNumber() > other._current->getNumber();

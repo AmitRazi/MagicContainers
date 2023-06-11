@@ -2,8 +2,8 @@
 // Created by 97250 on 11/06/2023.
 //
 
-#ifndef MAGICCONTAINERS_LINKEDLIST_HPP
-#define MAGICCONTAINERS_LINKEDLIST_HPP
+#ifndef MAGICCONTAINERS_MAGICALLINKEDLIST_HPP
+#define MAGICCONTAINERS_MAGICALLINKEDLIST_HPP
 #include <memory>
 namespace ariel {
     class Node {
@@ -29,7 +29,7 @@ namespace ariel {
 
     };
 
-    class LinkedList {
+    class magicalLinkedList {
         Node *head;
         Node *primeHead;
         Node *tail;
@@ -38,8 +38,8 @@ namespace ariel {
         void reorganizeSideCross();
 
     public:
-        LinkedList() : head(nullptr), primeHead(nullptr),
-                       tail(new Node(-1, true, nullptr, nullptr, nullptr, nullptr, nullptr)), size(0) {};
+        magicalLinkedList() : head(nullptr), primeHead(nullptr),
+                              tail(new Node(INT_MAX, true, nullptr, nullptr, nullptr, nullptr, nullptr)), size(0) {};
 
         void insert(Node *node);
 
@@ -72,4 +72,4 @@ namespace ariel {
 }
 
 
-#endif //MAGICCONTAINERS_LINKEDLIST_HPP
+#endif //MAGICCONTAINERS_MAGICALLINKEDLIST_HPP

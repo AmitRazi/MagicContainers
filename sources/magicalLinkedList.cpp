@@ -2,19 +2,20 @@
 // Created by 97250 on 11/06/2023.
 //
 
-#include "LinkedList.hpp"
+#include "magicalLinkedList.hpp"
 namespace ariel {
-    void LinkedList::insert(const int num) {
+    void magicalLinkedList::insert(const int num) {
         Node *node = new Node(num, false, nullptr, nullptr, nullptr, nullptr, nullptr);
         insert(node);
     }
 
-    void LinkedList::insert(Node *node) {
+    void magicalLinkedList::insert(Node *node) {
         if (head == nullptr) {
             head = node;
             head->_nextAsc = tail;
             head->_nextCross = tail;
             tail->_previous = node;
+            primeHead == nullptr ? primeHead = tail : primeHead = primeHead;
             size++;
             return;
         }
@@ -48,14 +49,16 @@ namespace ariel {
         size++;
     }
 
-    void LinkedList::remove(const int num) {
+    void magicalLinkedList::remove(const int num) {
         Node *current = head;
 
         while (current != nullptr && current != tail && current->_number != num) {
             current = current->_nextAsc;
         }
 
-        if (current == tail) return;
+        if (current == tail) {
+            throw std::runtime_error("Element does not exists");
+        }
 
         if (current == head) {
             head = current->_nextAsc;
@@ -77,7 +80,7 @@ namespace ariel {
         size--;
     }
 
-    void LinkedList::removePrime(Node *node) {
+    void magicalLinkedList::removePrime(Node *node) {
         if (primeHead == node) {
             primeHead = node->_nextPrime;
             if (node->_nextPrime != nullptr) {
@@ -93,7 +96,7 @@ namespace ariel {
         }
     }
 
-    void LinkedList::insertPrime(const int num) {
+    void magicalLinkedList::insertPrime(const int num) {
         Node *node = new Node(num, true, nullptr, nullptr, nullptr, nullptr, nullptr);
 
         if (head == nullptr || primeHead == nullptr) {
@@ -131,7 +134,7 @@ namespace ariel {
         }
     }
 
-    void LinkedList::reorganizeSideCross() {
+    void magicalLinkedList::reorganizeSideCross() {
         Node *left = head;
         Node *right = tail->_previous;
         int index = 0;
@@ -156,9 +159,5 @@ namespace ariel {
 
         left->_nextCross = tail;
         left->_crossIndex = index;
-
-        if (lastProcessedNode != nullptr) {
-            lastProcessedNode->_nextCross = left;
-        }
     }
 }

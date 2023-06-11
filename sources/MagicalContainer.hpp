@@ -6,12 +6,12 @@
 #define MAGICCONTAINERS_MAGICALCONTAINER_HPP
 
 
-#include "LinkedList.hpp"
+#include "magicalLinkedList.hpp"
 
 namespace ariel {
     class MagicalContainer {
     private:
-        LinkedList list;
+        magicalLinkedList list;
 
     public:
         MagicalContainer() {};
