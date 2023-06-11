@@ -15,7 +15,9 @@ namespace ariel {
             head->_nextAsc = tail;
             head->_nextCross = tail;
             tail->_previous = node;
-            primeHead == nullptr ? primeHead = tail : primeHead = primeHead;
+            if(primeHead == nullptr){
+                primeHead = tail;
+            }
             size++;
             return;
         }
