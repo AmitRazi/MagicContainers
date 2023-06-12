@@ -248,4 +248,54 @@ TEST_SUITE("Iterators Tests") {
 
         CHECK_EQ(Iter,Iter.end());
     }
+
+
+    TEST_CASE("Comparison operators for different iterator types throw exception") {
+        MagicalContainer list;
+        list.addElement(2);
+        list.addElement(25);
+        list.addElement(17);
+        list.addElement(3);
+        list.addElement(9);
+
+        MagicalContainer::AscendingIterator ascIter(list);
+        MagicalContainer::PrimeIterator primeIter(list);
+        MagicalContainer::SideCrossIterator sideIter(list);
+
+        // Comparing AscendingIterator with PrimeIterator
+        CHECK_THROWS_AS((ascIter < primeIter), std::runtime_error);
+        CHECK_THROWS_AS((ascIter > primeIter), std::runtime_error);
+        CHECK_THROWS_AS((ascIter == primeIter), std::runtime_error);
+        CHECK_THROWS_AS((ascIter != primeIter), std::runtime_error);
+
+        // Comparing AscendingIterator with SideCrossIterator
+        CHECK_THROWS_AS((ascIter < sideIter), std::runtime_error);
+        CHECK_THROWS_AS((ascIter > sideIter), std::runtime_error);
+        CHECK_THROWS_AS((ascIter == sideIter), std::runtime_error);
+        CHECK_THROWS_AS((ascIter != sideIter), std::runtime_error);
+
+        // Comparing PrimeIterator with AscendingIterator
+        CHECK_THROWS_AS((primeIter < ascIter), std::runtime_error);
+        CHECK_THROWS_AS((primeIter > ascIter), std::runtime_error);
+        CHECK_THROWS_AS((primeIter == ascIter), std::runtime_error);
+        CHECK_THROWS_AS((primeIter != ascIter), std::runtime_error);
+
+        // Comparing PrimeIterator with SideCrossIterator
+        CHECK_THROWS_AS((primeIter < sideIter), std::runtime_error);
+        CHECK_THROWS_AS((primeIter > sideIter), std::runtime_error);
+        CHECK_THROWS_AS((primeIter == sideIter), std::runtime_error);
+        CHECK_THROWS_AS((primeIter != sideIter), std::runtime_error);
+
+        // Comparing SideCrossIterator with AscendingIterator
+        CHECK_THROWS_AS((sideIter < ascIter), std::runtime_error);
+        CHECK_THROWS_AS((sideIter > ascIter), std::runtime_error);
+        CHECK_THROWS_AS((sideIter == ascIter), std::runtime_error);
+        CHECK_THROWS_AS((sideIter != ascIter), std::runtime_error);
+
+        // Comparing SideCrossIterator with PrimeIterator
+        CHECK_THROWS_AS((sideIter < primeIter), std::runtime_error);
+        CHECK_THROWS_AS((sideIter > primeIter), std::runtime_error);
+        CHECK_THROWS_AS((sideIter == primeIter), std::runtime_error);
+        CHECK_THROWS_AS((sideIter != primeIter), std::runtime_error);
+    }
 }
